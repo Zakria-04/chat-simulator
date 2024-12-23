@@ -10,13 +10,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Images } from "@/assets/images/images";
 import ChatList from "@/components/ChatList";
+import { initializeSocket } from "@/assets/res/socket";
 
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+
+  const socket = initializeSocket();
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log(`Socket connected? ${socket.connected}`);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
