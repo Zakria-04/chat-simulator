@@ -242,11 +242,11 @@ const styles = StyleSheet.create({
   imagePreviewContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 8, // Spacing between image and input
+    marginRight: 8,
     position: "relative",
   },
   imagePreview: {
-    width: 40, // Adjust size of preview
+    width: 40,
     height: 40,
     borderRadius: 8,
     resizeMode: "cover",
