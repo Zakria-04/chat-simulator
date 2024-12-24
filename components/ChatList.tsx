@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 interface Message {
   text: string;
   sender: string;
+  image: string | null;
 }
 
 interface ChatListProps {
@@ -21,6 +22,9 @@ const ChatList: React.FC<ChatListProps> = ({ item, socketID }) => {
           : styles.receiverContainer,
       ]}
     >
+      {item.image ? (
+        <Image source={{ uri: item.image }} style={styles.image} />
+      ) : null}
       <Text style={styles.text}>{item.text}</Text>
     </View>
   );
@@ -46,5 +50,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15,
+  },
+  image: {
+    width: 150,
+    height: 150,
   },
 });
