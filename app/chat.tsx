@@ -149,6 +149,17 @@ const Chat = () => {
 
           {/* chat input footer */}
           <View style={styles.inputContainer}>
+            {image && (
+              <View style={styles.imagePreviewContainer}>
+                <Image source={{ uri: image }} style={styles.imagePreview} />
+                <TouchableOpacity
+                  onPress={() => setImage(null)}
+                  style={styles.clearImageButton}
+                >
+                  <Text style={styles.clearImageText}>X</Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <TextInput
               style={styles.input}
               value={message}
@@ -226,5 +237,34 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
+  },
+
+  imagePreviewContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 8, // Spacing between image and input
+    position: "relative",
+  },
+  imagePreview: {
+    width: 40, // Adjust size of preview
+    height: 40,
+    borderRadius: 8,
+    resizeMode: "cover",
+  },
+  clearImageButton: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  clearImageText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });
