@@ -15,9 +15,14 @@ import { Images } from "@/assets/images/images";
 import ChatList from "@/components/ChatList";
 import { initializeSocket } from "@/assets/res/socket";
 
+type Message = {
+  text: string;
+  sender: string;
+};
+
 const Chat = () => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const socket = initializeSocket();
 
@@ -26,10 +31,25 @@ const Chat = () => {
       console.log(`Socket connected? ${socket.connected}`);
     });
 
+    socket.on("message", (data) => {
+      console.log("Received message:", data);
+      setMessages((prevMessage) => [...prevMessage, data]);
+    });
+
     return () => {
       socket.disconnect();
     };
   }, []);
+
+  const sendNewMessage = () => {
+    const newMessage = { text: message, sender: socket.id || "" };
+
+    if (message.trim()) {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      socket.emit("message", newMessage);
+      setMessage("");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -44,7 +64,9 @@ const Chat = () => {
           <View style={styles.chatBody}>
             <FlatList
               data={messages}
-              renderItem={({ item }) => <ChatList item={item} />}
+              renderItem={({ item }) => (
+                <ChatList item={item} socketID={socket.id} />
+              )}
             />
           </View>
 
@@ -52,6 +74,7 @@ const Chat = () => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
+              value={message}
               placeholder="Type a message"
               onChangeText={setMessage}
             />
@@ -64,7 +87,7 @@ const Chat = () => {
               <Image source={Images.gallery()} style={styles.inputBtns} />
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={sendNewMessage}>
               <Image source={Images.send()} style={styles.inputBtns} />
             </TouchableOpacity>
           </View>
